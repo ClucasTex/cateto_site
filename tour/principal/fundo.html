@@ -26,7 +26,8 @@
 <script>
 (function () {
   // velocidade em graus por segundo (negativo roda para a esquerda)
-  var VELOCIDADE = 4;
+  // mais lenta para quem tem as animações reduzidas no computador
+  var VELOCIDADE = /lento/.test(location.search) ? 1.5 : 4;
   var LIMPAR =
     "events.dispatch(hidetourcontrols);" +
     "for(set(i,0), i LT layer.count, inc(i), set(layer[get(i)].visible,false); set(layer[get(i)].alpha,0));" +
