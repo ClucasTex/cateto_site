@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Tour em fundo | CATETO</title>
+<!-- Versão do tour Panotour para o fundo da secção CATETO360 do site:
+     roda sozinho, sem botões, menus, pontos de ligação nem controlo pelo rato. -->
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#000}
+  #panoDIV{position:absolute;inset:0}
+  body > :not(#panoDIV):not(script){display:none!important}
+</style>
+<script>
+  // funções dos plugins do Panotour (mapa, etc.) que não são precisas no fundo
+  window.invokePluginFunction = window.eventUnloadPlugins = window.resetValuesForPlugins = function () {};
+</script>
+<script src="indexdata/lib/jquery-2.1.1.min.js"></script>
+<script src="indexdata/lib/Kolor/KolorTools.min.js"></script>
+<script src="indexdata/graphics/KolorBootstrap.js"></script>
+<script src="indexdata/index.js"></script>
+</head>
+<body>
+<div id="panoDIV"></div>
+<script>
+(function () {
+  // velocidade em graus por segundo (negativo roda para a esquerda)
+  var VELOCIDADE = 4;
+  var LIMPAR =
+    "events.dispatch(hidetourcontrols);" +
+    "for(set(i,0), i LT layer.count, inc(i), set(layer[get(i)].visible,false); set(layer[get(i)].alpha,0));" +
+    "for(set(i,0), i LT hotspot.count, inc(i), set(hotspot[get(i)].visible,false));" +
+    "set(control.usercontrol,off); showlog(false);" +
+    "set(contextmenu.enterfs,false);" +
+    "set(autorotate.enabled,true); set(autorotate.waittime,0); set(autorotate.speed," + VELOCIDADE + ");";
+
+  embedpano({
+    id: "krpanoSWFObject",
+    xml: "indexdata/index.xml",
+    target: "panoDIV",
+    bgcolor: "#000000",
+    html5: "only+webgl",
+    focus: false,
+    mwheel: false,
+    onready: function (k) {
+      // a interface do Panotour vai aparecendo enquanto o tour carrega; repete a limpeza
+      var n = 0, t = setInterval(function () {
+        try { k.call(LIMPAR); } catch (e) {}
+        if (++n > 40) { clearInterval(t); setInterval(function () { try { k.call(LIMPAR); } catch (e) {} }, 500); }
+      }, 200);
+      try { parent.postMessage("cateto-tour-pronto", "*"); } catch (e) {}
+    }
+  });
+})();
+</script>
+</body>
+</html>

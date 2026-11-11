@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Gestão | CATETO Topografia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/area.css">
+</head>
+<body>
+<header class="top">
+  <div class="in">
+    <a class="brand" href="../">
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><path d="M3 31 V3 L31 31 Z" fill="#A6CD24"/><path d="M3 31 V3" stroke="#837B30" stroke-width="4"/><path d="M3 31 H31" stroke="#FFAD5B" stroke-width="4"/><rect x="3" y="24" width="7" height="7" fill="none" stroke="#000" stroke-width="1.6"/></svg>
+      <b>CATETO</b><span>Gestão</span>
+    </a>
+    <nav><a href="./">Área de clientes</a><button class="link" id="sair">Sair</button></nav>
+  </div>
+</header>
+
+<main>
+  <div class="notice" id="aviso" hidden></div>
+
+  <div id="app" hidden>
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="clientes">Clientes</button>
+      <button role="tab" aria-selected="false" data-tab="coment">Comentários<span class="badge" id="pend" hidden></span></button>
+    </div>
+
+    <!-- clientes -->
+    <div id="tab-clientes" class="adm">
+      <section class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px">
+          <h2>Clientes</h2>
+          <button class="btn sm" id="novo">Novo cliente</button>
+        </div>
+        <div class="field" style="margin-top:0"><label for="procura" class="sr">Procurar</label><input id="procura" placeholder="Procurar por nome ou email"></div>
+        <ul class="clist" id="clist" style="margin-top:12px"></ul>
+      </section>
+
+      <div>
+        <section class="panel" id="p-novo" hidden>
+          <h2>Novo cliente</h2>
+          <p class="hint">Cria a conta de acesso. Depois envie ao cliente o email, a palavra-passe e o link da área de clientes.</p>
+          <form id="f-novo" novalidate>
+            <div class="grid2">
+              <div class="field"><label for="c-nome">Nome</label><input id="c-nome" required></div>
+              <div class="field"><label for="c-email">Email</label><input id="c-email" type="email" required></div>
+              <div class="field"><label for="c-tel">Telefone</label><input id="c-tel" type="tel"></div>
+              <div class="field"><label for="c-pass">Palavra-passe inicial</label>
+                <div style="display:flex;gap:8px"><input id="c-pass" required minlength="8"><button type="button" class="btn sec sm" id="gerar">Gerar</button></div>
+              </div>
+            </div>
+            <div class="field"><label for="c-notas">Notas internas</label><input id="c-notas" placeholder="Ex.: processo 2026-114, Tavira"></div>
+            <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+              <button class="btn" type="submit">Criar cliente</button>
+              <button class="btn sec" type="button" id="cancelar">Cancelar</button>
+            </div>
+            <p class="msg" id="n-msg" role="status"></p>
+          </form>
+          <div id="credenciais" hidden style="margin-top:18px">
+            <div class="field"><label for="cred-txt">Mensagem para o cliente</label><textarea id="cred-txt" rows="6" readonly></textarea></div>
+            <button class="btn sec sm" type="button" id="copiar" style="margin-top:10px">Copiar mensagem</button>
+          </div>
+        </section>
+
+        <div id="p-cliente" hidden>
+          <section class="panel">
+            <h2 id="cl-nome"></h2>
+            <p class="hint" id="cl-info"></p>
+          </section>
+
+          <section class="panel">
+            <h2>Ficheiros</h2>
+            <p class="hint">PDF, DWG, DXF, imagens ou ZIP. O cliente vê e descarrega estes ficheiros.</p>
+            <label class="drop" id="drop">
+              <input type="file" id="up" multiple hidden>
+              Arraste ficheiros para aqui ou <span class="link">escolha no computador</span>
+            </label>
+            <p class="msg" id="up-msg" role="status"></p>
+            <ul class="items" id="a-fic"></ul>
+          </section>
+
+          <section class="panel">
+            <h2>Tours virtuais 360°</h2>
+            <p class="hint">Cole o link do tour (por exemplo, do cateto360.com).</p>
+            <form id="f-tour" class="grid2" novalidate style="align-items:end">
+              <div class="field"><label for="t-tit">Título</label><input id="t-tit" placeholder="Moradia em Santa Luzia"></div>
+              <div class="field"><label for="t-url">Link</label><input id="t-url" type="url" placeholder="https://..."></div>
+              <div><button class="btn" type="submit">Adicionar tour</button></div>
+            </form>
+            <p class="msg" id="t-msg" role="status"></p>
+            <ul class="items" id="a-tours"></ul>
+          </section>
+        </div>
+
+        <section class="panel" id="p-vazio">
+          <div class="empty">Escolha um cliente na lista ou crie um novo.</div>
+        </section>
+      </div>
+    </div>
+
+    <!-- comentários -->
+    <div id="tab-coment" hidden>
+      <section class="panel">
+        <h2>Por aprovar</h2>
+        <p class="hint">Só aparecem no site depois de aprovados.</p>
+        <div id="c-pend"></div>
+      </section>
+      <section class="panel">
+        <h2>Publicados</h2>
+        <div id="c-pub"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="../assets/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/area.js"></script>
+<script>
+(function(){
+  var A = window.AREA, db = A.db, $ = A.$;
+  var aviso = $("#aviso");
+  if (!db) { aviso.hidden = false; aviso.innerHTML = "A gestão ainda não está ligada. Preencha <code>assets/config.js</code> (ver README)."; return; }
+
+  var clientes = [], atual = null;
+
+  $("#sair").onclick = async function(){ await db.auth.signOut(); location.href = "./"; };
+
+  (async function init(){
+    var s = await db.auth.getSession();
+    if (!s.data.session) { location.href = "./"; return; }
+    var adm = await db.rpc("is_admin");
+    if (adm.data !== true) { aviso.hidden = false; aviso.textContent = "Esta conta não tem acesso à gestão."; return; }
+    $("#app").hidden = false;
+    carregarClientes(); carregarComentarios();
+  })();
+
+  // separadores
+  document.querySelectorAll("[data-tab]").forEach(function(b){
+    b.onclick = function(){
+      document.querySelectorAll("[data-tab]").forEach(function(x){ x.setAttribute("aria-selected", x === b); });
+      $("#tab-clientes").hidden = b.dataset.tab !== "clientes";
+      $("#tab-coment").hidden = b.dataset.tab !== "coment";
+    };
+  });
+
+  // apagar em dois cliques, sem caixas de diálogo
+  function apagar(label, fn){
+    var b = A.btn(label || "Apagar", "danger sm"), t;
+    b.onclick = function(){
+      if (b.dataset.c) { clearTimeout(t); b.disabled = true; fn(); return; }
+      b.dataset.c = 1; b.textContent = "Confirmar";
+      t = setTimeout(function(){ delete b.dataset.c; b.textContent = label || "Apagar"; }, 3000);
+    };
+    return b;
+  }
+
+  // ---------- clientes ----------
+  async function carregarClientes(){
+    var r = await db.from("clientes").select("*").order("nome");
+    clientes = r.data || []; listar();
+  }
+  function listar(){
+    var q = $("#procura").value.trim().toLowerCase(), ul = $("#clist");
+    ul.innerHTML = "";
+    var f = clientes.filter(function(c){ return !q || (c.nome + " " + c.email).toLowerCase().indexOf(q) >= 0; });
+    if (!f.length) { ul.innerHTML = '<li class="empty">' + (clientes.length ? "Nenhum cliente encontrado." : "Ainda não há clientes.") + "</li>"; return; }
+    f.forEach(function(c){
+      var li = document.createElement("li"), b = document.createElement("button");
+      b.type = "button"; b.setAttribute("aria-current", atual && atual.id === c.id);
+      b.textContent = c.nome;
+      var s = document.createElement("small"); s.textContent = c.email; b.appendChild(s);
+      b.onclick = function(){ abrir(c); };
+      li.appendChild(b); ul.appendChild(li);
+    });
+  }
+  $("#procura").oninput = listar;
+
+  function painel(id){ ["#p-novo","#p-cliente","#p-vazio"].forEach(function(p){ $(p).hidden = p !== id; }); }
+
+  function gerar(){
+    var c = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789", a = new Uint32Array(10), s = "";
+    crypto.getRandomValues(a); a.forEach(function(n){ s += c[n % c.length]; }); return s;
+  }
+  $("#novo").onclick = function(){
+    atual = null; listar(); painel("#p-novo"); $("#f-novo").reset(); $("#f-novo").hidden = false;
+    $("#credenciais").hidden = true; A.msg($("#n-msg"), ""); $("#c-pass").value = gerar(); $("#c-nome").focus();
+  };
+  $("#gerar").onclick = function(){ $("#c-pass").value = gerar(); };
+  $("#cancelar").onclick = function(){ painel("#p-vazio"); };
+
+  $("#f-novo").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var m = $("#n-msg"), nome = $("#c-nome").value.trim(), email = $("#c-email").value.trim().toLowerCase(), pass = $("#c-pass").value;
+    if (!nome || !email) { A.msg(m, "Preencha o nome e o email.", "err"); return; }
+    if (pass.length < 8) { A.msg(m, "A palavra-passe tem de ter pelo menos 8 caracteres.", "err"); return; }
+    A.msg(m, "A criar conta…");
+    // cliente temporário para não terminar a sessão do administrador
+    var tmp = window.supabase.createClient(window.CATETO.SUPABASE_URL, window.CATETO.SUPABASE_ANON_KEY,
+      { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: "cateto-tmp" } });
+    var r = await tmp.auth.signUp({ email: email, password: pass, options: { emailRedirectTo: location.origin + location.pathname.replace(/admin\.html$/, "") } });
+    if (r.error) { A.msg(m, "Não foi possível criar a conta: " + r.error.message, "err"); return; }
+    if (!r.data.user || (r.data.user.identities && r.data.user.identities.length === 0)) { A.msg(m, "Já existe uma conta com este email.", "err"); return; }
+    var ins = await db.from("clientes").insert({ id: r.data.user.id, nome: nome, email: email,
+      telefone: $("#c-tel").value.trim() || null, notas: $("#c-notas").value.trim() || null }).select().single();
+    if (ins.error) { A.msg(m, "A conta foi criada mas a ficha do cliente não: " + ins.error.message, "err"); return; }
+    A.msg(m, "Cliente criado.", "ok");
+    var link = location.origin + location.pathname.replace(/admin\.html$/, "");
+    $("#cred-txt").value = "Olá " + nome + ",\n\nJá pode consultar os seus trabalhos na área de clientes da CATETO:\n" + link +
+      "\n\nEmail: " + email + "\nPalavra-passe: " + pass + "\n\nPode mudar a palavra-passe em \"Esqueci-me da palavra-passe\".\n\nCATETO Topografia";
+    $("#credenciais").hidden = false; $("#f-novo").hidden = true;
+    clientes.push(ins.data); clientes.sort(function(a,b){ return a.nome.localeCompare(b.nome); }); atual = ins.data; listar();
+  });
+  $("#copiar").onclick = async function(){
+    try { await navigator.clipboard.writeText($("#cred-txt").value); this.textContent = "Copiada"; }
+    catch (e) { $("#cred-txt").select(); this.textContent = "Selecionada, use Ctrl+C"; }
+  };
+
+  function abrir(c){
+    atual = c; listar(); painel("#p-cliente");
+    $("#cl-nome").textContent = c.nome;
+    $("#cl-info").textContent = [c.email, c.telefone, c.notas].filter(Boolean).join("   |   ");
+    A.msg($("#up-msg"), ""); A.msg($("#t-msg"), "");
+    ficheiros(); tours();
+  }
+
+  // ---------- ficheiros ----------
+  async function ficheiros(){
+    var ul = $("#a-fic"), c = atual;
+    ul.innerHTML = "";
+    var r = await db.storage.from("ficheiros").list(c.id, { limit: 500, sortBy: { column: "created_at", order: "desc" } });
+    if (c !== atual) return;
+    var f = (r.data || []).filter(function(x){ return x.id && x.name !== ".emptyFolderPlaceholder"; });
+    if (!f.length) { ul.innerHTML = '<li class="empty" style="border:0">Sem ficheiros.</li>'; return; }
+    f.forEach(function(x){
+      var li = A.item(A.ext(x.name), x.name, A.tam(x.metadata && x.metadata.size) + "  " + A.dia(x.created_at));
+      li.querySelector(".act").appendChild(apagar("Apagar", async function(){
+        var d = await db.storage.from("ficheiros").remove([c.id + "/" + x.name]);
+        if (d.error) { A.msg($("#up-msg"), "Não foi possível apagar " + x.name + ".", "err"); return; }
+        ficheiros();
+      }));
+      ul.appendChild(li);
+    });
+  }
+  function limpo(n){
+    return n.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w.\-]+/g, "_").replace(/_+/g, "_");
+  }
+  async function enviar(files){
+    if (!atual || !files.length) return;
+    var m = $("#up-msg"), ok = 0, falhas = [];
+    for (var i = 0; i < files.length; i++) {
+      A.msg(m, "A carregar " + (i + 1) + " de " + files.length + ": " + files[i].name);
+      var r = await db.storage.from("ficheiros").upload(atual.id + "/" + limpo(files[i].name), files[i], { upsert: true });
+      if (r.error) falhas.push(files[i].name); else ok++;
+    }
+    A.msg(m, falhas.length ? ok + " carregado(s). Falharam: " + falhas.join(", ") + " (verifique o tamanho máximo no Supabase)." : ok + " ficheiro(s) carregado(s).", falhas.length ? "err" : "ok");
+    $("#up").value = ""; ficheiros();
+  }
+  $("#up").onchange = function(){ enviar(this.files); };
+  var drop = $("#drop");
+  ["dragenter","dragover"].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add("on"); }); });
+  ["dragleave","drop"].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.remove("on"); }); });
+  drop.addEventListener("drop", function(e){ enviar(e.dataTransfer.files); });
+
+  // ---------- tours ----------
+  async function tours(){
+    var ul = $("#a-tours"), c = atual;
+    ul.innerHTML = "";
+    var r = await db.from("tours").select("*").eq("cliente", c.id).order("criado", { ascending: false });
+    if (c !== atual) return;
+    if (!r.data || !r.data.length) { ul.innerHTML = '<li class="empty" style="border:0">Sem tours.</li>'; return; }
+    r.data.forEach(function(t){
+      var li = A.item("360", t.titulo, t.url, "t360");
+      li.querySelector(".act").appendChild(apagar("Apagar", async function(){
+        await db.from("tours").delete().eq("id", t.id); tours();
+      }));
+      ul.appendChild(li);
+    });
+  }
+  $("#f-tour").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var m = $("#t-msg"), tit = $("#t-tit").value.trim(), url = $("#t-url").value.trim();
+    if (!tit || !/^https?:\/\//.test(url)) { A.msg(m, "Escreva um título e um link que comece por https://", "err"); return; }
+    var r = await db.from("tours").insert({ cliente: atual.id, titulo: tit, url: url });
+    if (r.error) { A.msg(m, "Não foi possível adicionar: " + r.error.message, "err"); return; }
+    this.reset(); A.msg(m, "Tour adicionado.", "ok"); tours();
+  });
+
+  // ---------- comentários ----------
+  async function carregarComentarios(){
+    var r = await db.from("comentarios").select("*").order("criado", { ascending: false });
+    var d = r.data || [], pend = d.filter(function(c){ return !c.aprovado; }), pub = d.filter(function(c){ return c.aprovado; });
+    $("#pend").hidden = !pend.length; $("#pend").textContent = pend.length;
+    desenhar($("#c-pend"), pend, true); desenhar($("#c-pub"), pub, false);
+  }
+  function desenhar(box, lista, pendente){
+    box.innerHTML = "";
+    if (!lista.length) { box.innerHTML = '<div class="empty">' + (pendente ? "Não há comentários por aprovar." : "Ainda não publicou comentários novos.") + "</div>"; return; }
+    lista.forEach(function(c){
+      var d = document.createElement("div"); d.className = "rv-adm";
+      var h = document.createElement("b"); h.textContent = c.nome;
+      var s = document.createElement("small"); s.textContent = "  " + A.dia(c.criado) + (c.email ? "  " + c.email : "");
+      var p = document.createElement("p"); p.textContent = c.texto;
+      var act = document.createElement("div"); act.style.cssText = "display:flex;gap:8px";
+      var tg = A.btn(pendente ? "Aprovar" : "Retirar do site", "sm" + (pendente ? "" : " sec"));
+      tg.onclick = async function(){ tg.disabled = true; await db.from("comentarios").update({ aprovado: pendente }).eq("id", c.id); carregarComentarios(); };
+      act.append(tg, apagar("Apagar", async function(){ await db.from("comentarios").delete().eq("id", c.id); carregarComentarios(); }));
+      d.append(h, s, p, act); box.appendChild(d);
+    });
+  }
+})();
+</script>
+</body>
+</html>

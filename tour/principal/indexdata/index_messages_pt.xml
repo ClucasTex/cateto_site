@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<krpano>
+
+<!-- ************************ -->
+<!--         Messages         -->
+<!-- ************************ -->
+
+  <data name="pt_project_title"><![CDATA[ATELIER RUA - Estiramantens]]></data>
+  <data name="pt_project_author_name"><![CDATA[CarlosTeixeira]]></data>
+  <data name="pt_project_author_url"><![CDATA[http://www.photopografia.com]]></data>
+
+
+
+  <data name="pt_pano626_title"><![CDATA[Exterior Frontal ]]></data>
+  <data name="pt_spotpoint628_tooltip"><![CDATA[Exterior terraço ]]></data>
+  <data name="pt_spotpoint629_tooltip"><![CDATA[Quarto]]></data>
+  <data name="pt_spotpoint630_tooltip"><![CDATA[Sala]]></data>
+  <data name="pt_spotpoint631_tooltip"><![CDATA[Quarto]]></data>
+  <data name="pt_spotpoint632_tooltip"><![CDATA[Ramada ]]></data>
+
+
+  <data name="pt_pano624_title"><![CDATA[Exterior terraço ]]></data>
+  <data name="pt_spotpoint633_tooltip"><![CDATA[Exterior Frontal ]]></data>
+
+  <data name="pt_panogroup62_title"><![CDATA[Construção existente]]></data>
+
+  <data name="pt_pano86_title"><![CDATA[Quarto]]></data>
+  <data name="pt_spotpoint202_tooltip"><![CDATA[Quarto]]></data>
+  <data name="pt_spotpoint203_tooltip"><![CDATA[Sala]]></data>
+  <data name="pt_pano67_title"><![CDATA[Arrumos]]></data>
+  <data name="pt_spotpoint95_tooltip"><![CDATA[Arrumos]]></data>
+  <data name="pt_pano68_title"><![CDATA[Quarto]]></data>
+  <data name="pt_spotpoint204_tooltip"><![CDATA[Sala]]></data>
+  <data name="pt_spotpoint205_tooltip"><![CDATA[Quarto]]></data>
+  <data name="pt_pano186_title"><![CDATA[Sala]]></data>
+  <data name="pt_spotpoint198_tooltip"><![CDATA[Cozinha]]></data>
+  <data name="pt_spotpoint199_tooltip"><![CDATA[Sala]]></data>
+  <data name="pt_spotpoint200_tooltip"><![CDATA[Quarto]]></data>
+  <data name="pt_spotpoint201_tooltip"><![CDATA[Quarto]]></data>
+  <data name="pt_pano190_title"><![CDATA[Ramada ]]></data>
+  <data name="pt_spotpoint209_tooltip"><![CDATA[Exterior Frontal ]]></data>
+  <data name="pt_spotpoint210_tooltip"><![CDATA[Ramada Norte]]></data>
+  <data name="pt_pano189_title"><![CDATA[Ramada Norte]]></data>
+  <data name="pt_spotpoint211_tooltip"><![CDATA[Ramada ]]></data>
+  <data name="pt_pano581_title"><![CDATA[Cozinha]]></data>
+  <data name="pt_spotpoint584_tooltip"><![CDATA[Arrumos]]></data>
+  <data name="pt_spotpoint585_tooltip"><![CDATA[Sala]]></data>
+
+
+	<data name="pt_spotmap707_tooltip"><![CDATA[Construção existente]]></data>
+	<data name="pt_spotmap708_tooltip"><![CDATA[Quarto]]></data>
+	<data name="pt_spotmap709_tooltip"><![CDATA[Arrumos]]></data>
+	<data name="pt_spotmap710_tooltip"><![CDATA[Quarto]]></data>
+	<data name="pt_spotmap711_tooltip"><![CDATA[Sala]]></data>
+	<data name="pt_spotmap712_tooltip"><![CDATA[Ramada ]]></data>
+	<data name="pt_spotmap713_tooltip"><![CDATA[Ramada Norte]]></data>
+	<data name="pt_spotmap714_tooltip"><![CDATA[Cozinha]]></data>
+
+
+
+	<data name="pt_panogroup62_floor_title"><![CDATA[Planta do Rés do Chão]]></data>
+	<data name="pt_spotmap102_tooltip"><![CDATA[Quarto]]></data>
+	<data name="pt_spotmap103_tooltip"><![CDATA[Cozinha]]></data>
+	<data name="pt_spotmap104_tooltip"><![CDATA[Arrumos]]></data>
+	<data name="pt_spotmap105_tooltip"><![CDATA[Quarto]]></data>
+	<data name="pt_spotmap195_tooltip"><![CDATA[Ramada Norte]]></data>
+	<data name="pt_spotmap196_tooltip"><![CDATA[Ramada ]]></data>
+	<data name="pt_spotmap197_tooltip"><![CDATA[Sala]]></data>
+
+  <data name="pt_contextmenuopenwebsitelabel1"><![CDATA[]]></data>
+  <data name="pt_contextmenuwebsiteurl1"><![CDATA[]]></data>
+  <data name="pt_contextmenuopenFsLabel"><![CDATA[Entrar para Tela Cheia]]></data>
+  <data name="pt_contextmenucloseFsLabel"><![CDATA[Sair da Tela Cheia]]></data>
+  <data name="pt_contextmenunormallabel"><![CDATA[Vista Normal]]></data>
+  <data name="pt_contextmenuarchitecturallabel"><![CDATA[Vista de Arquitectura]]></data>
+  <data name="pt_contextmenulittleplanetlabel"><![CDATA[Vista Pequeno Planeta]]></data>
+  <data name="pt_controlBar_dpadzoomInTip"><![CDATA[Ampliar]]></data>
+  <data name="pt_controlBar_dpadzoomOutTip"><![CDATA[Afastar]]></data>
+  <data name="pt_controlBar_dpadmoveLeftTip"><![CDATA[Mover para  a esquerda]]></data>
+  <data name="pt_controlBar_dpadmoveRightTip"><![CDATA[Mover par a a direita]]></data>
+  <data name="pt_controlBar_dpadmoveUpTip"><![CDATA[Mover para cima]]></data>
+  <data name="pt_controlBar_dpadmoveDownTip"><![CDATA[Mover para baixo]]></data>
+  <data name="pt_controlBar_dpadopenFsTip"><![CDATA[Entrar para Ecrã Inteiro]]></data>
+  <data name="pt_controlBar_dpadcloseFsTip"><![CDATA[Sair do Ecrã Inteiro]]></data>
+  <data name="pt_controlBar_dpadautotourOnTip"><![CDATA[Iniciar Visita Automática]]></data>
+  <data name="pt_controlBar_dpadautotourOffTip"><![CDATA[Parar Visita Automática]]></data>
+  <data name="pt_controlBar_dpadgyroOnTip"><![CDATA[Activar Giroscópio]]></data>
+  <data name="pt_controlBar_dpadgyroOffTip"><![CDATA[Desactivar Giroscópio]]></data>
+  <data name="pt_controlBar_dpadgyroNotTip"><![CDATA[Gyroscope is unavailable]]></data>
+  <data name="pt_controlBar_dpaddisplayHelpTip"><![CDATA[Mostrar Ecrã de Ajuda]]></data>
+  <data name="pt_controlBar_dpadhideHelpTip"><![CDATA[Esconder Ecrã de Ajuda]]></data>
+  <data name="pt_controlBar_dpaddisplayControlsTip"><![CDATA[Mostrar controles]]></data>
+  <data name="pt_controlBar_dpadhideControlsTip"><![CDATA[Esconder controles]]></data>
+  <data name="pt_controlBar_dpadctrlmodeDragTip"><![CDATA[Alterar modo de controle]]></data>
+  <data name="pt_controlBar_dpadctrlmodeMoveTip"><![CDATA[Alterar modo de controle]]></data>
+  <data name="pt_panotourmapskey"><![CDATA[AIzaSyAGCOxhzn_mVRQNww7hvEyBTkE8rHyOm6w]]></data>
+  <data name="pt_panotourmapsmap_title"><![CDATA[Mapa de localização]]></data>
+  <data name="pt_logowebsiteurl"><![CDATA[http://www.photopografia.com]]></data>
+  <data name="pt_logotooltipText"><![CDATA[Abrir site]]></data>
+  <data name="pt_togglebuttonfirsttooltip"><![CDATA[Abrir mapa]]></data>
+  <data name="pt_togglebuttonsecondtooltip"><![CDATA[Fechar mapa]]></data>
+  <data name="pt_togglebutton1firsttooltip"><![CDATA[Abrir planta]]></data>
+  <data name="pt_togglebutton1secondtooltip"><![CDATA[Fechar planta]]></data>
+  <data name="pt_alpo_start_screenss_title"><![CDATA[PHOTOPOGRAFIA | CATETO - Estiramantens | Outubro 2017]]></data>
+  <data name="pt_alpo_start_screenssfontsize"><![CDATA[3]]></data>
+  <data name="pt_alpo_start_screensstitlelineheight"><![CDATA[3]]></data>
+
+
+  <data name="pt_vr_setup_hmd0"><![CDATA[SELECIONAR O SEU HMD]]></data>
+  <data name="pt_vr_setup_advanced"><![CDATA[CONFIGURAÇÕES AVANÇADAS]]></data>
+  <data name="pt_vr_setup_title"><![CDATA[CONFIGURAÇÕES WEB VR]]></data>
+  <data name="pt_vr_setup_dvn1"><![CDATA[Dispositivo:]]></data>
+  <data name="pt_vr_setup_siz1"><![CDATA[Tamanho do ecrã:]]></data>
+  <data name="pt_vr_setup_ipd1"><![CDATA[IPD:]]></data>
+  <data name="pt_vr_setup_hmd1"><![CDATA[HMD:]]></data>
+  <data name="pt_vr_setup_hmd3"><![CDATA[Personalizar]]></data>
+  <data name="pt_vr_setup_cal"><![CDATA[Calibrar giroscópio]]></data>
+  <data name="pt_vr_setup_sav"><![CDATA[SALVAR]]></data>
+  <data name="pt_vr_setup_rst"><![CDATA[APAGAR]]></data>
+  <data name="pt_vr_setup_simple"><![CDATA[SIMPLES]]></data>
+  <data name="pt_vr_setup_cls"><![CDATA[FECHAR]]></data>
+  <data name="pt_vr_setup_m31"><![CDATA[CONFIGURAÇÕES HMD]]></data>
+  <data name="pt_vr_setup_fov1"><![CDATA[FOV:]]></data>
+  <data name="pt_vr_setup_dst1"><![CDATA[Distorção:]]></data>
+  <data name="pt_vr_setup_d2tx"><![CDATA[Distorção 2:]]></data>
+  <data name="pt_vr_setup_vig1"><![CDATA[Recorte:]]></data>
+  <data name="pt_vr_setup_cac1"><![CDATA[Aberração cromática:]]></data>
+  <data name="pt_vr_setup_olp1"><![CDATA[Sobreposição:]]></data>
+  <data name="pt_vr_setup_m35"><![CDATA[VOLTAR]]></data>
+  <data name="pt_vr_setup_cb1"><![CDATA[GIROSCÓPIO]]></data>
+  <data name="pt_vr_setup_cb2"><![CDATA[Coloque o seu dispositivo numa superfície plana e [br]estável, clique para CALIBRAR[br] para corrigir o movimento anormal do giroscópio.]]></data>
+  <data name="pt_vr_setup_cb3"><![CDATA[CALIBRAR]]></data>
+  <data name="pt_vr_setup_cb4"><![CDATA[APAGAR]]></data>
+  <data name="pt_vr_setup_cb5"><![CDATA[VOLTAR]]></data>
+  <data name="pt_vr_setup_cb6"><![CDATA[Calibrando]]></data>
+  <data name="pt_vr_setup_cb7"><![CDATA[Calibração com sucesso]]></data>
+  <data name="pt_vr_setup_cb8"><![CDATA[Calibração sem sucesso]]></data>
+  <data name="pt_vr_setup_unavailable"><![CDATA[Modo VR[br]não está disponivel no seu dispositivo ]]></data>
+
+
+
+
+
+
+
+
+
+  <data name="pt_panogroup62_description"><![CDATA[Planta do Rés do Chão]]></data>
+
+
+
+
+
+
+
+
+
+</krpano>

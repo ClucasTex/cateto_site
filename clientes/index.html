@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Área de clientes | CATETO Topografia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/area.css">
+</head>
+<body>
+<header class="top">
+  <div class="in">
+    <a class="brand" href="../">
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><path d="M3 31 V3 L31 31 Z" fill="#A6CD24"/><path d="M3 31 V3" stroke="#837B30" stroke-width="4"/><path d="M3 31 H31" stroke="#FFAD5B" stroke-width="4"/><rect x="3" y="24" width="7" height="7" fill="none" stroke="#000" stroke-width="1.6"/></svg>
+      <b>CATETO</b><span>Área de clientes</span>
+    </a>
+    <nav>
+      <a href="admin.html" id="nav-admin" hidden>Gestão</a>
+      <button class="link" id="sair" hidden>Sair</button>
+      <a href="../" id="voltar">Voltar ao site</a>
+    </nav>
+  </div>
+</header>
+
+<div class="notice" id="nocfg" hidden style="max-width:1100px;margin:24px auto">
+  A área de clientes ainda não está ligada. Preencha <code>SUPABASE_URL</code> e <code>SUPABASE_ANON_KEY</code> no ficheiro <code>assets/config.js</code> (ver README).
+</div>
+
+<!-- entrar -->
+<section class="auth" id="v-login" hidden>
+  <div class="art" aria-hidden="true">
+    <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="#8C8436" stroke-width="1.2">
+        <path d="M-20 120 C120 60 260 180 380 120 S560 40 640 90"/><path d="M-20 190 C130 130 250 250 390 190 S560 110 640 160"/>
+        <path d="M-20 260 C140 200 250 320 400 260 S570 180 640 230" stroke="#B7AE52" stroke-width="2.2"/>
+        <path d="M-20 330 C150 270 260 390 410 330 S580 250 640 300"/><path d="M-20 400 C160 340 270 460 420 400 S590 320 640 370"/>
+        <path d="M-20 470 C170 410 280 530 430 470 S600 390 640 440"/><path d="M-20 540 C180 480 290 600 440 540 S610 460 640 510" stroke="#B7AE52" stroke-width="2.2"/>
+        <path d="M-20 610 C190 550 300 670 450 610 S620 530 640 580"/>
+      </g>
+      <path d="M420 228 l22 38 h-44z" fill="none" stroke="#A6CD24" stroke-width="2.5"/>
+    </svg>
+    <p>Os seus levantamentos e tours virtuais, sempre à mão.</p>
+  </div>
+  <div class="box">
+    <form id="f-login" novalidate>
+      <h1>Área de clientes</h1>
+      <p class="sub">Entre com o email e a palavra-passe que a CATETO lhe enviou.</p>
+      <div class="field"><label for="l-email">Email</label><input id="l-email" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="l-pass">Palavra-passe</label><input id="l-pass" type="password" autocomplete="current-password" required></div>
+      <button class="btn" type="submit">Entrar</button>
+      <p class="msg" id="l-msg" role="status"></p>
+      <div class="row"><button type="button" class="link" id="go-esq">Esqueci-me da palavra-passe</button></div>
+    </form>
+    <form id="f-esq" novalidate hidden>
+      <h1>Recuperar palavra-passe</h1>
+      <p class="sub">Indique o seu email. Enviamos-lhe um link para escolher uma palavra-passe nova.</p>
+      <div class="field"><label for="e-email">Email</label><input id="e-email" type="email" autocomplete="email" required></div>
+      <button class="btn" type="submit">Enviar link</button>
+      <p class="msg" id="e-msg" role="status"></p>
+      <div class="row"><button type="button" class="link" id="go-login">Voltar a entrar</button></div>
+    </form>
+    <form id="f-nova" novalidate hidden>
+      <h1>Nova palavra-passe</h1>
+      <p class="sub">Escolha uma palavra-passe com pelo menos 8 caracteres.</p>
+      <div class="field"><label for="n-pass">Nova palavra-passe</label><input id="n-pass" type="password" autocomplete="new-password" minlength="8" required></div>
+      <div class="field"><label for="n-pass2">Repetir palavra-passe</label><input id="n-pass2" type="password" autocomplete="new-password" required></div>
+      <button class="btn" type="submit">Guardar palavra-passe</button>
+      <p class="msg" id="n-msg" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<!-- painel do cliente -->
+<main id="v-painel" hidden>
+  <div class="hello">
+    <div><h1 id="ola">Olá</h1><p id="ola-sub"></p></div>
+  </div>
+
+  <section class="panel" aria-labelledby="t-tours">
+    <h2 id="t-tours">Tours virtuais 360°</h2>
+    <p class="hint">Veja aqui ou abra numa janela nova para partilhar.</p>
+    <ul class="items" id="tours"></ul>
+    <div id="viewer-wrap" hidden>
+      <div class="viewer"><iframe id="viewer" title="Tour virtual 360°" allowfullscreen allow="fullscreen; gyroscope; accelerometer"></iframe></div>
+      <div class="viewer-bar"><b id="viewer-t"></b><a id="viewer-open" href="#" target="_blank" rel="noopener">Abrir numa janela nova</a></div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-fic">
+    <h2 id="t-fic">Ficheiros</h2>
+    <p class="hint">Plantas, levantamentos e relatórios dos seus trabalhos.</p>
+    <ul class="items" id="ficheiros"></ul>
+  </section>
+
+  <p style="color:var(--muted);font-size:15px">Falta algum documento? Ligue 962 604 606 ou escreva para <a href="mailto:ct@cateto.pt">ct@cateto.pt</a>.</p>
+</main>
+
+<script src="../assets/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/area.js"></script>
+<script>
+(function(){
+  var A = window.AREA, db = A.db;
+  var $ = A.$;
+  if (!db) { $("#nocfg").hidden = false; $("#v-login").hidden = false; return; }
+
+  var recovering = false;
+  function show(id){ ["#f-login","#f-esq","#f-nova"].forEach(function(f){ $(f).hidden = f !== id; }); }
+  $("#go-esq").onclick = function(){ show("#f-esq"); $("#e-email").value = $("#l-email").value; $("#e-email").focus(); };
+  $("#go-login").onclick = function(){ show("#f-login"); };
+
+  $("#f-login").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var m = $("#l-msg"), b = this.querySelector("button[type=submit]");
+    var email = $("#l-email").value.trim(), pass = $("#l-pass").value;
+    if (!email || !pass) { A.msg(m, "Preencha o email e a palavra-passe.", "err"); return; }
+    b.disabled = true; A.msg(m, "A entrar…");
+    var r = await db.auth.signInWithPassword({ email: email, password: pass });
+    b.disabled = false;
+    if (r.error) { A.msg(m, /confirm/i.test(r.error.message) ? "Confirme primeiro o seu email, no link que recebeu." : "Email ou palavra-passe errados.", "err"); return; }
+    A.msg(m, ""); painel(r.data.user);
+  });
+
+  $("#f-esq").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var m = $("#e-msg"), email = $("#e-email").value.trim();
+    if (!email) { A.msg(m, "Escreva o seu email.", "err"); return; }
+    A.msg(m, "A enviar…");
+    var r = await db.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+    if (r.error) { A.msg(m, "Não foi possível enviar o link. Tente daqui a uns minutos.", "err"); return; }
+    A.msg(m, "Se o email estiver registado, vai receber um link em poucos minutos.", "ok");
+  });
+
+  $("#f-nova").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var m = $("#n-msg"), p1 = $("#n-pass").value, p2 = $("#n-pass2").value;
+    if (p1.length < 8) { A.msg(m, "A palavra-passe tem de ter pelo menos 8 caracteres.", "err"); return; }
+    if (p1 !== p2) { A.msg(m, "As duas palavras-passe não são iguais.", "err"); return; }
+    var r = await db.auth.updateUser({ password: p1 });
+    if (r.error) { A.msg(m, "Não foi possível guardar. Peça um link novo.", "err"); return; }
+    recovering = false; history.replaceState(null, "", location.pathname);
+    var u = await db.auth.getUser(); painel(u.data.user);
+  });
+
+  $("#sair").onclick = async function(){ await db.auth.signOut(); location.reload(); };
+
+  db.auth.onAuthStateChange(function(ev){
+    if (ev === "PASSWORD_RECOVERY") { recovering = true; $("#v-painel").hidden = true; $("#v-login").hidden = false; show("#f-nova"); }
+  });
+
+  db.auth.getSession().then(function(r){
+    if (recovering) return;
+    var s = r.data.session;
+    if (s && !/type=recovery/.test(location.hash)) painel(s.user); else { $("#v-login").hidden = false; if (!recovering) show("#f-login"); }
+  });
+
+  async function painel(user){
+    $("#v-login").hidden = true; $("#v-painel").hidden = false; $("#sair").hidden = false; $("#voltar").hidden = true;
+    var adm = await db.rpc("is_admin");
+    if (adm.data === true) $("#nav-admin").hidden = false;
+    var c = await db.from("clientes").select("nome").eq("id", user.id).maybeSingle();
+    $("#ola").textContent = "Olá, " + ((c.data && c.data.nome) || user.email);
+    $("#ola-sub").textContent = user.email;
+    carregarTours(user.id); carregarFicheiros(user.id);
+  }
+
+  async function carregarTours(uid){
+    var ul = $("#tours");
+    var r = await db.from("tours").select("id,titulo,url,criado").eq("cliente", uid).order("criado", { ascending: false });
+    ul.innerHTML = "";
+    if (r.error || !r.data.length) { ul.outerHTML = '<div class="empty" id="tours">Ainda não tem tours virtuais.</div>'; return; }
+    r.data.forEach(function(t){
+      var li = A.item("360", t.titulo, A.dia(t.criado), "t360");
+      var ver = A.btn("Ver aqui", "sm"); ver.onclick = function(){ abrir(t); };
+      var a = document.createElement("a"); a.className = "btn sec sm"; a.href = t.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Abrir";
+      li.querySelector(".act").append(ver, a); ul.appendChild(li);
+    });
+  }
+  function abrir(t){
+    $("#viewer-wrap").hidden = false; $("#viewer").src = t.url; $("#viewer-t").textContent = t.titulo; $("#viewer-open").href = t.url;
+    $("#viewer-wrap").scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  async function carregarFicheiros(uid){
+    var ul = $("#ficheiros");
+    var r = await db.storage.from("ficheiros").list(uid, { limit: 500, sortBy: { column: "created_at", order: "desc" } });
+    var files = (r.data || []).filter(function(f){ return f.id && f.name !== ".emptyFolderPlaceholder"; });
+    ul.innerHTML = "";
+    if (r.error || !files.length) { ul.outerHTML = '<div class="empty" id="ficheiros">Ainda não tem ficheiros disponíveis.</div>'; return; }
+    files.forEach(function(f){
+      var li = A.item(A.ext(f.name), f.name, A.tam(f.metadata && f.metadata.size) + "  " + A.dia(f.created_at));
+      var b = A.btn("Descarregar", "sm");
+      b.onclick = async function(){
+        b.disabled = true;
+        var s = await db.storage.from("ficheiros").createSignedUrl(uid + "/" + f.name, 300, { download: f.name });
+        b.disabled = false;
+        if (s.error) { alertaErro(li); return; }
+        location.href = s.data.signedUrl;
+      };
+      li.querySelector(".act").appendChild(b); ul.appendChild(li);
+    });
+  }
+  function alertaErro(li){ var s = li.querySelector("small"); s.textContent = "Não foi possível descarregar. Tente de novo."; s.style.color = "var(--err)"; }
+})();
+</script>
+</body>
+</html>
