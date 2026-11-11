@@ -599,7 +599,7 @@ footer .brand b{color:#fff;font-size:20px}
     }
     function tour(){
       var f=document.createElement('iframe');
-      f.src=C.TOUR+'fundo.html'+(calm?'?lento':''); f.title='Tour virtual em fundo'; f.tabIndex=-1; f.setAttribute('aria-hidden','true');
+      f.src=C.TOUR+'fundo.html?v=4'+(calm?'&lento':''); f.title='Tour virtual em fundo'; f.tabIndex=-1; f.setAttribute('aria-hidden','true');
       f.setAttribute('loading','lazy');
       var pronto=false;
       function mostrar(){if(pronto)return;pronto=true;setTimeout(function(){sec.classList.add('has-pano')},2500)}
