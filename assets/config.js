@@ -3,8 +3,8 @@
 // 2) Em Project Settings > API copie o "Project URL" e a chave "anon public"
 // 3) Cole-os aqui. A chave "anon" pode estar pública; a segurança é feita pelas regras do ficheiro supabase/setup.sql
 window.CATETO = {
-  SUPABASE_URL: "",       // ex.: "https://abcdxyz.supabase.co"
-  SUPABASE_ANON_KEY: "",  // ex.: "eyJhbGciOi..."
+  SUPABASE_URL: "https://ahqqjwhukdrhupedrkev.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFocXFqd2h1a2RyaHVwZWRya2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ3MjMwNDUsImV4cCI6MjExMDI5OTA0NX0.rwKyqBjvzPeEWD2Nq9pO60t2Yc9twumOyJgOuDj-sUM",
 
   // Tour virtual (pasta do Panotour com o ficheiro fundo.html) que roda no fundo da secção CATETO360.
   // Deixe "" para usar só a panorâmica abaixo.
