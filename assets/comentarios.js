@@ -1,4 +1,4 @@
-// Comentários de clientes (texto original do site cateto.pt) + comentários novos aprovados no Supabase
+// Comentários de clientes (texto original do site cateto.pt). Para acrescentar um, junte uma linha à lista BASE.
 (function () {
   var BASE = [
     ["Jorge Fonseca", "2026-09-10", "en", "Quick,efficient, very friendly good communicator,flexible English and Portuguese"],
@@ -51,14 +51,6 @@
     more.hidden = true;
   });
 
-  var db = window.CATETO && window.CATETO.db();
-  if (db) {
-    db.from("comentarios").select("nome,texto,criado").eq("aprovado", true).then(function (r) {
-      if (r.error || !r.data || !r.data.length) return;
-      render(BASE.concat(r.data.map(function (c) { return [c.nome, c.criado.slice(0, 10), "", c.texto]; })));
-    });
-  }
-
   // formulário de comentário
   var form = document.getElementById("cform"), out = document.getElementById("c-out");
   form.addEventListener("submit", function (e) {
@@ -67,13 +59,10 @@
     out.className = "form-msg err";
     if (!nome) { out.textContent = "Escreva o seu nome."; form.nome.focus(); return; }
     if (texto.length < 10) { out.textContent = "Escreva o comentário (pelo menos 10 caracteres)."; form.texto.focus(); return; }
-    if (!db) { out.textContent = "O envio de comentários ainda não está ligado. Envie-nos o comentário para ct@cateto.pt."; return; }
-    out.className = "form-msg"; out.textContent = "A enviar…";
-    db.from("comentarios").insert({ nome: nome, texto: texto, email: email || null }).then(function (r) {
-      if (r.error) { out.className = "form-msg err"; out.textContent = "O comentário não foi enviado. Tente de novo ou escreva para ct@cateto.pt."; return; }
-      form.reset();
-      out.textContent = "Obrigado. O comentário vai ser publicado depois de lido.";
-    });
+    var corpo = "Nome: " + nome + (email ? "\nEmail: " + email : "") + "\n\n" + texto;
+    location.href = "mailto:ct@cateto.pt?subject=" + encodeURIComponent("Comentário para o site da CATETO") + "&body=" + encodeURIComponent(corpo);
+    out.className = "form-msg";
+    out.innerHTML = 'Abriu-se o seu programa de email com o comentário. Se não abriu, envie-o para <a href="mailto:ct@cateto.pt">ct@cateto.pt</a>.';
   });
 
 })();
