@@ -42,7 +42,7 @@
     rows.sort(function (a, b) { return a[1] < b[1] ? 1 : -1; });
     list.innerHTML = "";
     rows.forEach(function (r, i) { list.appendChild(el(r[0], r[1], r[2], r[3], i)); });
-    more.textContent = "Ver todos os " + (rows.length + 1) + " comentários";
+    more.textContent = "Ver todos os comentários";
     more.hidden = rows.length <= SHOW;
   }
   render(BASE.slice());
