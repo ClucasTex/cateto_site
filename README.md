@@ -5,7 +5,7 @@ Site estático para GitHub Pages, com área de clientes e comentários ligados a
 ```
 index.html            site principal
 clientes/index.html   área de clientes (entrar, recuperar palavra-passe, ficheiros e tours 360°)
-clientes/admin.html   gestão (criar clientes, carregar ficheiros, tours, aprovar comentários)
+clientes/admin.html   gestão (criar clientes, links de ficheiros, tours, aprovar comentários)
 assets/config.js      ligação ao Supabase
 supabase/setup.sql    tabelas e regras de segurança
 tour/principal/        tour virtual Panotour (fundo da secção CATETO360)
@@ -22,15 +22,18 @@ O GitHub Pages só serve páginas estáticas e não corre PHP. O login, os fiche
 5. **Authentication > URL Configuration**: em **Site URL** ponha `https://www.cateto.pt` e em **Redirect URLs** acrescente `https://www.cateto.pt/clientes/`. Isto serve para o link de "Esqueci-me da palavra-passe".
 6. **Project Settings > API**: copie o **Project URL** e a chave **anon public** para `assets/config.js`.
 
-Tamanho máximo por ficheiro no plano gratuito: 50 MB (pode alterar em Storage > Settings). O plano gratuito inclui 1 GB de ficheiros.
+O Supabase gratuito guarda só as contas, os links e os comentários. Os ficheiros dos clientes ficam no seu Google Drive, por isso o espaço do Supabase não se esgota.
+
+**Pausa do plano gratuito:** os projetos gratuitos param ao fim de 1 semana sem atividade. O ficheiro `.github/workflows/supabase-ativo.yml` visita o Supabase de 3 em 3 dias para isso não acontecer (pode ver em Actions > Manter Supabase ativo). O GitHub desliga estas tarefas automáticas se o repositório passar 60 dias sem alterações; nesse caso, em Actions, carregue em Enable workflow.
 
 ## 2. Usar a área de clientes
 
 - Entre em `/clientes/` com a conta de administrador. Aparece o link **Gestão**.
 - **Novo cliente**: nome, email e palavra-passe (o botão Gerar cria uma). No fim aparece a mensagem pronta a copiar e enviar ao cliente.
-- Escolha o cliente na lista para carregar ficheiros (PDF, DWG, DXF, ZIP...) e acrescentar links de tours 360°.
+- Escolha o cliente na lista para acrescentar ficheiros e tours 360°.
+- **Ficheiros:** no Google Drive, botão direito no ficheiro (ou numa pasta com vários) > Partilhar > "Qualquer pessoa com o link" > Copiar link. Na gestão, escreva o nome que o cliente vê e cole o link. O cliente tem um botão para descarregar (ficheiros) ou abrir (pastas).
 - Separador **Comentários**: aprove ou apague os comentários deixados no site. Só os aprovados aparecem.
-- Para apagar a conta de um cliente: Supabase > Authentication > Users > apagar. Os tours e a ficha saem automaticamente; os ficheiros apague-os antes, na gestão.
+- Para apagar a conta de um cliente: Supabase > Authentication > Users > apagar. A ficha, os links dos ficheiros e os tours saem automaticamente. Os ficheiros no Google Drive ficam; deixe de os partilhar se quiser.
 
 Os clientes antigos do cateto360.com não passam automaticamente: crie-os de novo na gestão.
 

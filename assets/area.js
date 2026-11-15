@@ -24,5 +24,14 @@
     var a = document.createElement("div"); a.className = "act";
     li.append(i, n, a); return li;
   }
-  window.AREA = { $: $, msg: msg, dia: dia, tam: tam, ext: ext, btn: btn, item: item, db: window.CATETO && window.CATETO.db() };
+  // link de partilha do Google Drive -> link de descarga direta (só para ficheiros, não pastas)
+  function driveDown(u) {
+    var m = /drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:.*&)?id=)([\w-]{10,})/.exec(u || "");
+    return m ? "https://drive.google.com/uc?export=download&id=" + m[1] : null;
+  }
+  function tipo(nome, url) {
+    if (/drive\.google\.com\/drive\/(u\/\d+\/)?folders\//.test(url || "")) return "PASTA";
+    return ext(nome);
+  }
+  window.AREA = { $: $, msg: msg, dia: dia, tam: tam, ext: ext, btn: btn, item: item, driveDown: driveDown, tipo: tipo, db: window.CATETO && window.CATETO.db() };
 })();

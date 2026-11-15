@@ -186,24 +186,20 @@
 
   async function carregarFicheiros(uid){
     var ul = $("#ficheiros");
-    var r = await db.storage.from("ficheiros").list(uid, { limit: 500, sortBy: { column: "created_at", order: "desc" } });
-    var files = (r.data || []).filter(function(f){ return f.id && f.name !== ".emptyFolderPlaceholder"; });
+    var r = await db.from("ficheiros").select("id,nome,url,criado").eq("cliente", uid).order("criado", { ascending: false });
     ul.innerHTML = "";
-    if (r.error || !files.length) { ul.outerHTML = '<div class="empty" id="ficheiros">Ainda não tem ficheiros disponíveis.</div>'; return; }
-    files.forEach(function(f){
-      var li = A.item(A.ext(f.name), f.name, A.tam(f.metadata && f.metadata.size) + "  " + A.dia(f.created_at));
-      var b = A.btn("Descarregar", "sm");
-      b.onclick = async function(){
-        b.disabled = true;
-        var s = await db.storage.from("ficheiros").createSignedUrl(uid + "/" + f.name, 300, { download: f.name });
-        b.disabled = false;
-        if (s.error) { alertaErro(li); return; }
-        location.href = s.data.signedUrl;
-      };
-      li.querySelector(".act").appendChild(b); ul.appendChild(li);
+    if (r.error || !r.data.length) { ul.outerHTML = '<div class="empty" id="ficheiros">Ainda não tem ficheiros disponíveis.</div>'; return; }
+    r.data.forEach(function(f){
+      var li = A.item(A.tipo(f.nome, f.url), f.nome, A.dia(f.criado)), act = li.querySelector(".act");
+      var down = A.driveDown(f.url);
+      if (down) {
+        var d = document.createElement("a"); d.className = "btn sm"; d.href = down; d.textContent = "Descarregar"; act.appendChild(d);
+      }
+      var a = document.createElement("a"); a.className = "btn sec sm"; a.href = f.url; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = A.tipo(f.nome, f.url) === "PASTA" ? "Abrir pasta" : "Abrir"; act.appendChild(a);
+      ul.appendChild(li);
     });
   }
-  function alertaErro(li){ var s = li.querySelector("small"); s.textContent = "Não foi possível descarregar. Tente de novo."; s.style.color = "var(--err)"; }
 })();
 </script>
 </body>

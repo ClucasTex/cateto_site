@@ -65,23 +65,19 @@ revoke select on public.comentarios from anon;
 grant select (id, nome, texto, aprovado, criado) on public.comentarios to anon;
 grant insert (nome, texto, email) on public.comentarios to anon;
 
--- ---------- ficheiros (Storage) ----------
--- Cada cliente tem uma pasta com o seu id: ficheiros/<id do cliente>/planta.pdf
-insert into storage.buckets (id, name, public) values ('ficheiros', 'ficheiros', false)
-on conflict (id) do nothing;
-
-drop policy if exists "cliente le a sua pasta" on storage.objects;
-create policy "cliente le a sua pasta" on storage.objects for select
-  using (bucket_id = 'ficheiros' and ((storage.foldername(name))[1] = auth.uid()::text or public.is_admin()));
-drop policy if exists "admin carrega ficheiros" on storage.objects;
-create policy "admin carrega ficheiros" on storage.objects for insert
-  with check (bucket_id = 'ficheiros' and public.is_admin());
-drop policy if exists "admin altera ficheiros" on storage.objects;
-create policy "admin altera ficheiros" on storage.objects for update
-  using (bucket_id = 'ficheiros' and public.is_admin());
-drop policy if exists "admin apaga ficheiros" on storage.objects;
-create policy "admin apaga ficheiros" on storage.objects for delete
-  using (bucket_id = 'ficheiros' and public.is_admin());
+-- ---------- ficheiros (links do Google Drive) ----------
+create table if not exists public.ficheiros (
+  id bigint generated always as identity primary key,
+  cliente uuid not null references public.clientes (id) on delete cascade,
+  nome text not null,
+  url text not null,
+  criado timestamptz not null default now()
+);
+alter table public.ficheiros enable row level security;
+drop policy if exists "cliente ve os seus ficheiros" on public.ficheiros;
+create policy "cliente ve os seus ficheiros" on public.ficheiros for select using (cliente = auth.uid() or public.is_admin());
+drop policy if exists "admin gere ficheiros" on public.ficheiros;
+create policy "admin gere ficheiros" on public.ficheiros for all using (public.is_admin()) with check (public.is_admin());
 
 -- ---------- administrador ----------
 -- Este email tem de ser também uma conta criada em Authentication > Users.

@@ -75,11 +75,12 @@
 
           <section class="panel">
             <h2>Ficheiros</h2>
-            <p class="hint">PDF, DWG, DXF, imagens ou ZIP. O cliente vê e descarrega estes ficheiros.</p>
-            <label class="drop" id="drop">
-              <input type="file" id="up" multiple hidden>
-              Arraste ficheiros para aqui ou <span class="link">escolha no computador</span>
-            </label>
+            <p class="hint">No Google Drive, clique com o botão direito no ficheiro (ou pasta) &gt; Partilhar &gt; "Qualquer pessoa com o link" &gt; Copiar link. Cole-o aqui.</p>
+            <form id="f-fic" class="grid2" novalidate style="align-items:end">
+              <div class="field"><label for="f-nome">Nome que o cliente vê</label><input id="f-nome" placeholder="Planta topográfica.pdf"></div>
+              <div class="field"><label for="f-url">Link do Google Drive</label><input id="f-url" type="url" placeholder="https://drive.google.com/..."></div>
+              <div><button class="btn" type="submit">Adicionar ficheiro</button></div>
+            </form>
             <p class="msg" id="up-msg" role="status"></p>
             <ul class="items" id="a-fic"></ul>
           </section>
@@ -229,43 +230,29 @@
     ficheiros(); tours();
   }
 
-  // ---------- ficheiros ----------
+  // ---------- ficheiros (links do Google Drive) ----------
   async function ficheiros(){
     var ul = $("#a-fic"), c = atual;
     ul.innerHTML = "";
-    var r = await db.storage.from("ficheiros").list(c.id, { limit: 500, sortBy: { column: "created_at", order: "desc" } });
+    var r = await db.from("ficheiros").select("*").eq("cliente", c.id).order("criado", { ascending: false });
     if (c !== atual) return;
-    var f = (r.data || []).filter(function(x){ return x.id && x.name !== ".emptyFolderPlaceholder"; });
-    if (!f.length) { ul.innerHTML = '<li class="empty" style="border:0">Sem ficheiros.</li>'; return; }
-    f.forEach(function(x){
-      var li = A.item(A.ext(x.name), x.name, A.tam(x.metadata && x.metadata.size) + "  " + A.dia(x.created_at));
+    if (!r.data || !r.data.length) { ul.innerHTML = '<li class="empty" style="border:0">Sem ficheiros.</li>'; return; }
+    r.data.forEach(function(f){
+      var li = A.item(A.tipo(f.nome, f.url), f.nome, f.url);
       li.querySelector(".act").appendChild(apagar("Apagar", async function(){
-        var d = await db.storage.from("ficheiros").remove([c.id + "/" + x.name]);
-        if (d.error) { A.msg($("#up-msg"), "Não foi possível apagar " + x.name + ".", "err"); return; }
-        ficheiros();
+        await db.from("ficheiros").delete().eq("id", f.id); ficheiros();
       }));
       ul.appendChild(li);
     });
   }
-  function limpo(n){
-    return n.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w.\-]+/g, "_").replace(/_+/g, "_");
-  }
-  async function enviar(files){
-    if (!atual || !files.length) return;
-    var m = $("#up-msg"), ok = 0, falhas = [];
-    for (var i = 0; i < files.length; i++) {
-      A.msg(m, "A carregar " + (i + 1) + " de " + files.length + ": " + files[i].name);
-      var r = await db.storage.from("ficheiros").upload(atual.id + "/" + limpo(files[i].name), files[i], { upsert: true });
-      if (r.error) falhas.push(files[i].name); else ok++;
-    }
-    A.msg(m, falhas.length ? ok + " carregado(s). Falharam: " + falhas.join(", ") + " (verifique o tamanho máximo no Supabase)." : ok + " ficheiro(s) carregado(s).", falhas.length ? "err" : "ok");
-    $("#up").value = ""; ficheiros();
-  }
-  $("#up").onchange = function(){ enviar(this.files); };
-  var drop = $("#drop");
-  ["dragenter","dragover"].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add("on"); }); });
-  ["dragleave","drop"].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.remove("on"); }); });
-  drop.addEventListener("drop", function(e){ enviar(e.dataTransfer.files); });
+  $("#f-fic").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var m = $("#up-msg"), nome = $("#f-nome").value.trim(), url = $("#f-url").value.trim();
+    if (!nome || !/^https?:\/\//.test(url)) { A.msg(m, "Escreva o nome e cole um link que comece por https://", "err"); return; }
+    var r = await db.from("ficheiros").insert({ cliente: atual.id, nome: nome, url: url });
+    if (r.error) { A.msg(m, "Não foi possível adicionar: " + r.error.message, "err"); return; }
+    this.reset(); A.msg(m, "Ficheiro adicionado.", "ok"); ficheiros();
+  });
 
   // ---------- tours ----------
   async function tours(){
