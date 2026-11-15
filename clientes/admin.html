@@ -96,6 +96,11 @@
             <p class="msg" id="t-msg" role="status"></p>
             <ul class="items" id="a-tours"></ul>
           </section>
+          <section class="panel">
+            <h2>Atividade do cliente</h2>
+            <p class="hint">O que o cliente abriu e descarregou nesta área, com data e hora (últimos 100 registos).</p>
+            <table class="log"><thead><tr><th>Data e hora</th><th>Ação</th><th>Ficheiro ou tour</th></tr></thead><tbody id="a-log"></tbody></table>
+          </section>
         </div>
 
         <section class="panel" id="p-vazio">
@@ -227,7 +232,24 @@
     $("#cl-nome").textContent = c.nome;
     $("#cl-info").textContent = [c.email, c.telefone, c.notas].filter(Boolean).join("   |   ");
     A.msg($("#up-msg"), ""); A.msg($("#t-msg"), "");
-    ficheiros(); tours();
+    ficheiros(); tours(); atividade();
+  }
+
+  // ---------- atividade ----------
+  async function atividade(){
+    var tb = $("#a-log"), c = atual;
+    tb.innerHTML = "";
+    var r = await db.from("descargas").select("item,acao,quando").eq("cliente", c.id).order("quando", { ascending: false }).limit(100);
+    if (c !== atual) return;
+    if (!r.data || !r.data.length) { tb.innerHTML = '<tr><td colspan="3" class="empty-row">O cliente ainda não abriu nem descarregou nada.</td></tr>'; return; }
+    r.data.forEach(function(x){
+      var tr = document.createElement("tr");
+      var d = new Date(x.quando);
+      [d.toLocaleDateString("pt-PT") + " " + d.toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" }), x.acao, x.item].forEach(function(v, i){
+        var td = document.createElement("td"); td.textContent = v; if (i === 1) td.className = "ac-" + x.acao.replace(" ", "-"); tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
   }
 
   // ---------- ficheiros (links do Google Drive) ----------

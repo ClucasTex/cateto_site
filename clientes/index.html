@@ -157,7 +157,14 @@
     if (s && !/type=recovery/.test(location.hash)) painel(s.user); else { $("#v-login").hidden = false; if (!recovering) show("#f-login"); }
   });
 
+  var UID = null;
+  // regista no Supabase o que o cliente abriu ou descarregou (não bloqueia a abertura)
+  function registar(dados){
+    try { db.from("descargas").insert(Object.assign({ cliente: UID }, dados)).then(function(){}); } catch (e) {}
+  }
+
   async function painel(user){
+    UID = user.id;
     $("#v-login").hidden = true; $("#v-painel").hidden = false; $("#sair").hidden = false; $("#voltar").hidden = true;
     var adm = await db.rpc("is_admin");
     if (adm.data === true) $("#nav-admin").hidden = false;
@@ -174,8 +181,9 @@
     if (r.error || !r.data.length) { ul.outerHTML = '<div class="empty" id="tours">Ainda não tem tours virtuais.</div>'; return; }
     r.data.forEach(function(t){
       var li = A.item("360", t.titulo, A.dia(t.criado), "t360");
-      var ver = A.btn("Ver aqui", "sm"); ver.onclick = function(){ abrir(t); };
+      var ver = A.btn("Ver aqui", "sm"); ver.onclick = function(){ registar({ tour: t.id, item: t.titulo, acao: "viu tour" }); abrir(t); };
       var a = document.createElement("a"); a.className = "btn sec sm"; a.href = t.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Abrir";
+      a.addEventListener("click", function(){ registar({ tour: t.id, item: t.titulo, acao: "viu tour" }); });
       li.querySelector(".act").append(ver, a); ul.appendChild(li);
     });
   }
@@ -193,10 +201,14 @@
       var li = A.item(A.tipo(f.nome, f.url), f.nome, A.dia(f.criado)), act = li.querySelector(".act");
       var down = A.driveDown(f.url);
       if (down) {
-        var d = document.createElement("a"); d.className = "btn sm"; d.href = down; d.textContent = "Descarregar"; act.appendChild(d);
+        var d = document.createElement("a"); d.className = "btn sm"; d.href = down; d.target = "_blank"; d.rel = "noopener"; d.textContent = "Descarregar";
+        d.addEventListener("click", function(){ registar({ ficheiro: f.id, item: f.nome, acao: "descarregou" }); });
+        act.appendChild(d);
       }
       var a = document.createElement("a"); a.className = "btn sec sm"; a.href = f.url; a.target = "_blank"; a.rel = "noopener";
-      a.textContent = A.tipo(f.nome, f.url) === "PASTA" ? "Abrir pasta" : "Abrir"; act.appendChild(a);
+      a.textContent = A.tipo(f.nome, f.url) === "PASTA" ? "Abrir pasta" : "Abrir";
+      a.addEventListener("click", function(){ registar({ ficheiro: f.id, item: f.nome, acao: "abriu" }); });
+      act.appendChild(a);
       ul.appendChild(li);
     });
   }

@@ -85,3 +85,9 @@ main{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
 .notice{background:#FFF3E3;border:1.5px solid var(--orange);border-radius:6px;padding:16px 20px;margin-bottom:24px}
 .notice code{background:#fff;padding:1px 5px;border-radius:3px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.log{width:100%;border-collapse:collapse;font-size:15px}
+.log th{text-align:left;font-weight:600;color:var(--muted);font-size:13px;padding:0 12px 8px 0;border-bottom:2px solid var(--ink)}
+.log td{padding:10px 12px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.log td:first-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.log .empty-row{color:var(--muted);text-align:center;padding:22px 0}
+.ac-descarregou{color:#3D6B00;font-weight:650}

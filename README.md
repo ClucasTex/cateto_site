@@ -32,6 +32,7 @@ O Supabase gratuito guarda só as contas, os links e os comentários. Os ficheir
 - **Novo cliente**: nome, email e palavra-passe (o botão Gerar cria uma). No fim aparece a mensagem pronta a copiar e enviar ao cliente.
 - Escolha o cliente na lista para acrescentar ficheiros e tours 360°.
 - **Ficheiros:** no Google Drive, botão direito no ficheiro (ou numa pasta com vários) > Partilhar > "Qualquer pessoa com o link" > Copiar link. Na gestão, escreva o nome que o cliente vê e cole o link. O cliente tem um botão para descarregar (ficheiros) ou abrir (pastas).
+- **Atividade do cliente:** na ficha de cada cliente aparece o que ele abriu e descarregou na área de clientes, com data e hora. Só fica registado o que é feito através da área de clientes: se o cliente guardar o link do Drive e o abrir diretamente, isso não aparece.
 - Separador **Comentários**: aprove ou apague os comentários deixados no site. Só os aprovados aparecem.
 - Para apagar a conta de um cliente: Supabase > Authentication > Users > apagar. A ficha, os links dos ficheiros e os tours saem automaticamente. Os ficheiros no Google Drive ficam; deixe de os partilhar se quiser.
 

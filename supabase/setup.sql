@@ -79,6 +79,25 @@ create policy "cliente ve os seus ficheiros" on public.ficheiros for select usin
 drop policy if exists "admin gere ficheiros" on public.ficheiros;
 create policy "admin gere ficheiros" on public.ficheiros for all using (public.is_admin()) with check (public.is_admin());
 
+-- ---------- registo de descargas e visualizações ----------
+create table if not exists public.descargas (
+  id bigint generated always as identity primary key,
+  cliente uuid not null references public.clientes (id) on delete cascade,
+  ficheiro bigint references public.ficheiros (id) on delete set null,
+  tour bigint references public.tours (id) on delete set null,
+  item text not null,
+  acao text not null check (acao in ('descarregou','abriu','viu tour')),
+  quando timestamptz not null default now()
+);
+alter table public.descargas enable row level security;
+drop policy if exists "cliente regista as suas" on public.descargas;
+create policy "cliente regista as suas" on public.descargas for insert to authenticated
+  with check (cliente = auth.uid());
+drop policy if exists "admin ve registo" on public.descargas;
+create policy "admin ve registo" on public.descargas for select using (public.is_admin());
+drop policy if exists "admin apaga registo" on public.descargas;
+create policy "admin apaga registo" on public.descargas for delete using (public.is_admin());
+
 -- ---------- administrador ----------
 -- Este email tem de ser também uma conta criada em Authentication > Users.
 insert into public.admins (email) values ('ct@cateto.pt') on conflict do nothing;
