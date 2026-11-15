@@ -75,7 +75,19 @@
 
           <section class="panel">
             <h2>Ficheiros</h2>
-            <p class="hint">No Google Drive, clique com o botão direito no ficheiro (ou pasta) &gt; Partilhar &gt; "Qualquer pessoa com o link" &gt; Copiar link. Cole-o aqui.</p>
+            <h3 class="sub">Carregar ficheiros</h3>
+            <p class="hint">Cada descarga fica sempre registada e o link só dura 5 minutos. Até 50 MB por ficheiro.
+              São apagados do site ao fim de
+              <select id="prazo" aria-label="Prazo"><option value="30">30</option><option value="60" selected>60</option><option value="90">90</option></select> dias.</p>
+            <label class="drop" id="drop">
+              <input type="file" id="up" multiple hidden>
+              Arraste ficheiros para aqui ou <span class="link">escolha no computador</span>
+            </label>
+            <p class="msg" id="ent-msg" role="status"></p>
+            <ul class="items" id="a-ent"></ul>
+
+            <h3 class="sub" style="margin-top:32px">Ou link do Google Drive</h3>
+            <p class="hint">Para ficheiros grandes. No Drive: botão direito &gt; Partilhar &gt; "Qualquer pessoa com o link" &gt; Copiar link. Só fica registado quando o cliente o abre pela área de clientes.</p>
             <form id="f-fic" class="grid2" novalidate style="align-items:end">
               <div class="field"><label for="f-nome">Nome que o cliente vê</label><input id="f-nome" placeholder="Planta topográfica.pdf"></div>
               <div class="field"><label for="f-url">Link do Google Drive</label><input id="f-url" type="url" placeholder="https://drive.google.com/..."></div>
@@ -143,7 +155,7 @@
     var adm = await db.rpc("is_admin");
     if (adm.data !== true) { aviso.hidden = false; aviso.textContent = "Esta conta não tem acesso à gestão."; return; }
     $("#app").hidden = false;
-    carregarClientes(); carregarComentarios();
+    carregarClientes(); carregarComentarios(); limparExpirados();
   })();
 
   // separadores
@@ -231,8 +243,59 @@
     atual = c; listar(); painel("#p-cliente");
     $("#cl-nome").textContent = c.nome;
     $("#cl-info").textContent = [c.email, c.telefone, c.notas].filter(Boolean).join("   |   ");
-    A.msg($("#up-msg"), ""); A.msg($("#t-msg"), "");
-    ficheiros(); tours(); atividade();
+    A.msg($("#up-msg"), ""); A.msg($("#t-msg"), ""); A.msg($("#ent-msg"), "");
+    entregas(); ficheiros(); tours(); atividade();
+  }
+
+  // ---------- caixa de entrega (ficheiros carregados no site) ----------
+  async function entregas(){
+    var ul = $("#a-ent"), c = atual;
+    ul.innerHTML = "";
+    var r = await db.from("entregas").select("*").eq("cliente", c.id).order("criado", { ascending: false });
+    if (c !== atual) return;
+    if (!r.data || !r.data.length) { ul.innerHTML = '<li class="empty" style="border:0">Sem ficheiros carregados.</li>'; return; }
+    r.data.forEach(function(f){
+      var li = A.item(A.ext(f.nome), f.nome, A.tam(f.tamanho) + "   disponível até " + A.dia(f.expira));
+      li.querySelector(".act").appendChild(apagar("Apagar", async function(){
+        await db.storage.from("entregas").remove([f.caminho]);
+        await db.from("entregas").delete().eq("id", f.id); entregas();
+      }));
+      ul.appendChild(li);
+    });
+  }
+  function limpo(n){
+    return n.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w.\-]+/g, "_").replace(/_+/g, "_");
+  }
+  async function enviar(files){
+    if (!atual || !files.length) return;
+    var m = $("#ent-msg"), ok = 0, falhas = [], dias = +$("#prazo").value;
+    for (var i = 0; i < files.length; i++) {
+      var f = files[i];
+      if (f.size > 52428800) { falhas.push(f.name + " (mais de 50 MB)"); continue; }
+      A.msg(m, "A carregar " + (i + 1) + " de " + files.length + ": " + f.name);
+      var caminho = atual.id + "/" + Date.now() + "_" + limpo(f.name);
+      var up = await db.storage.from("entregas").upload(caminho, f, { upsert: false });
+      if (up.error) { falhas.push(f.name); continue; }
+      var ins = await db.from("entregas").insert({ cliente: atual.id, caminho: caminho, nome: f.name, tamanho: f.size,
+        expira: new Date(Date.now() + dias * 86400000).toISOString() });
+      if (ins.error) { await db.storage.from("entregas").remove([caminho]); falhas.push(f.name); continue; }
+      ok++;
+    }
+    A.msg(m, falhas.length ? ok + " carregado(s). Falharam: " + falhas.join(", ") : ok + " ficheiro(s) carregado(s).", falhas.length ? "err" : "ok");
+    $("#up").value = ""; entregas();
+  }
+  $("#up").onchange = function(){ enviar(this.files); };
+  var drop = $("#drop");
+  ["dragenter","dragover"].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add("on"); }); });
+  ["dragleave","drop"].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.remove("on"); }); });
+  drop.addEventListener("drop", function(e){ enviar(e.dataTransfer.files); });
+
+  // apaga do site os ficheiros cujo prazo já passou (corre sempre que abre a gestão)
+  async function limparExpirados(){
+    var r = await db.from("entregas").select("id,caminho").lt("expira", new Date().toISOString());
+    if (!r.data || !r.data.length) return;
+    await db.storage.from("entregas").remove(r.data.map(function(x){ return x.caminho; }));
+    await db.from("entregas").delete().in("id", r.data.map(function(x){ return x.id; }));
   }
 
   // ---------- atividade ----------

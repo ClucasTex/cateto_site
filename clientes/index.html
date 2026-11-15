@@ -195,9 +195,24 @@
   async function carregarFicheiros(uid){
     var ul = $("#ficheiros");
     var r = await db.from("ficheiros").select("id,nome,url,criado").eq("cliente", uid).order("criado", { ascending: false });
+    var e = await db.from("entregas").select("id,nome,caminho,tamanho,criado,expira").eq("cliente", uid).order("criado", { ascending: false });
+    var links = (r.data || []), ents = (e.data || []);
     ul.innerHTML = "";
-    if (r.error || !r.data.length) { ul.outerHTML = '<div class="empty" id="ficheiros">Ainda não tem ficheiros disponíveis.</div>'; return; }
-    r.data.forEach(function(f){
+    if (!links.length && !ents.length) { ul.outerHTML = '<div class="empty" id="ficheiros">Ainda não tem ficheiros disponíveis.</div>'; return; }
+    ents.forEach(function(f){
+      var li = A.item(A.ext(f.nome), f.nome, A.tam(f.tamanho) + "   disponível até " + A.dia(f.expira));
+      var b = A.btn("Descarregar", "sm");
+      b.onclick = async function(){
+        b.disabled = true; var s = li.querySelector("small"), antes = s.textContent;
+        var reg = await db.from("descargas").insert({ cliente: UID, entrega: f.id, caminho: f.caminho, item: f.nome, acao: "descarregou" });
+        var url = reg.error ? null : await db.storage.from("entregas").createSignedUrl(f.caminho, 300, { download: f.nome });
+        b.disabled = false;
+        if (!url || url.error) { s.textContent = "Não foi possível descarregar. Tente de novo ou contacte a CATETO."; s.style.color = "var(--err)"; setTimeout(function(){ s.textContent = antes; s.style.color = ""; }, 6000); return; }
+        location.href = url.data.signedUrl;
+      };
+      li.querySelector(".act").appendChild(b); ul.appendChild(li);
+    });
+    links.forEach(function(f){
       var li = A.item(A.tipo(f.nome, f.url), f.nome, A.dia(f.criado)), act = li.querySelector(".act");
       var down = A.driveDown(f.url);
       if (down) {
